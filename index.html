@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Clock</title>
+<style>
+  body {
+    font-family: Verdana, Geneva, sans-serif;
+    text-align: center;
+    margin-top: 50px; /* Adjusted margin for better alignment */
+    background-color: #f0f0f0;
+  }
+  .clock-container {
+    width: 200px;
+    height: 200px; /* Set height equal to width to ensure a perfect circle */
+    border-radius: 50%;
+    background-color: #000;
+    border: 5px solid #FFFFCC;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px; /* Added bottom margin for spacing */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
+  #clock {
+    font-size: 36px;
+    font-weight: bold;
+    color: #FFFFCC;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  #date {
+    font-size: 16px;
+    font-family: Verdana, Geneva, sans-serif;
+    color: #FFFFCC;
+    margin-top: 8px;
+  }
+  #format-toggle {
+    font-size: 16px;
+    background-color: #333;
+    color: #FFFFCC;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 20px; /* Added margin below button for spacing */
+  }
+</style>
+</head>
+<body>
+  <button id="format-toggle" onclick="toggleFormat()">12 / 24</button>
+  <div class="clock-container">
+    <div id="clock">00:00:00</div>
+    <div id="date">DAY, MONTH YEAR</div>
+  </div>
+
+  <script>
+    var is24HourFormat = true; // Initially set to 24-hour format
+
+    function updateClock() {
+      var now = new Date();
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      var seconds = now.getSeconds();
+
+      var ampm = ''; // Initialize empty string for AM/PM
+
+      if (!is24HourFormat) {
+        ampm = hours >= 12 ? 'PM' : 'AM'; // Determine AM or PM if in 12-hour format
+        hours = hours % 12 || 12; // Convert hours to 12-hour format
+      }
+
+      // Pad single digit minutes and seconds with leading zeros
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+
+      var timeString = `${hours}:${minutes}:${seconds} ${ampm}`.trim();
+
+      // Update the DOM with the current time
+      document.getElementById('clock').textContent = timeString;
+
+      // Format date as DAY, MONTH YEAR
+      var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+      var dayOfWeek = days[now.getDay()];
+      var month = months[now.getMonth()];
+      var year = now.getFullYear();
+
+      var dateString = `${dayOfWeek}, ${month} ${year}`;
+
+      // Update the DOM with the current date
+      document.getElementById('date').textContent = dateString;
+    }
+
+    function toggleFormat() {
+      is24HourFormat = !is24HourFormat; // Toggle between 12-hour and 24-hour formats
+      updateClock(); // Update the clock immediately after toggling format
+      updateToggleButton(); // Update the button text based on the format
+    }
+
+    function updateToggleButton() {
+      var button = document.getElementById('format-toggle');
+      button.textContent = is24HourFormat ? '12' : '24'; // Update button text to represent the current format
+    }
+
+    // Update the clock every second
+    setInterval(updateClock, 1000);
+
+    // Initial call to display the clock and date immediately
+    updateClock();
+    updateToggleButton(); // Initialize button text based on initial format
+  </script>
+</body>
+</html>
